@@ -13,6 +13,10 @@ export default function Home() {
   const [toggle,setToggle] = useState(false);
 
   const [error, setError] = useState({});
+  const checkEmail = ()=>{
+    let regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return !regEmail.test(user);
+  }
   const resetForm = ()=>{
     setUser('');
     setPassword1('');
@@ -23,11 +27,11 @@ export default function Home() {
   const submitForm = ()=>{
     let flag = false;
         if(user?.length===0){
-          setError((prev)=>({...prev,user:'Username is required'}));
+          setError((prev)=>({...prev,user:'Email is required'}));
           flag = true;
         }
-        if(user?.length<6){
-          setError((prev)=>({...prev,user:'Username must be atleast 6 characters long'}));
+        else if(checkEmail()){
+          setError((prev)=>({...prev,user:'Email is invalid'}));
           flag = true;
         }
         if(password1?.length===0){
@@ -55,7 +59,7 @@ export default function Home() {
   return (
     <main className="relative flex min-h-screen flex-row justify-end" >
       <Image src={img} quality={50} layout="fill"/>
-      <div className="flex rounded-lg shadow-[1px_1px_8px_1px_rgba(0,0,0,0.3)] flex-col mx-10 mt-10 h-[70vh] items-center w-2/5 backdrop-blur-lg bg-white/15 text-emerald-400">
+      <div className="flex rounded-lg shadow-[1px_1px_8px_1px_rgba(0,0,0,0.3)] flex-col mx-10 mt-10 h-[80vh] items-center w-2/5 backdrop-blur-lg bg-white/15 text-emerald-400">
         <div>
           <div className="mt-6 mb-2 text-[32px] cursor-default">Create Account</div>
         </div>
@@ -64,7 +68,7 @@ export default function Home() {
             htmlFor="input-group-1"
             className="flex flex-col pt-6 text-emerald-400"
           >
-            Username
+            Email
           </label>
 
           <div className="flex flex-col">
@@ -74,7 +78,7 @@ export default function Home() {
               value={user}
               onChange={(e)=>setUser(e.target.value)}
               className="mt-2 bg-transparent border-b-[1px] placeholder-slate-500 focus:outline-none focus:border-emerald-600 focus:border-b-2  border-emerald-400 text-black block flex-1 min-w-0 w-full text-md pb-1 pt-2"
-              placeholder="Username"
+              placeholder="Email"
             />
             {error?.user?<div className="flex items-center text-sm text-red-700">{error?.user}</div>:null}
           </div>

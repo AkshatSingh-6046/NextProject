@@ -16,15 +16,18 @@ export default function Home() {
     setPassword('');
     setToggle(false);
   }
-  
+  const checkEmail = ()=>{
+    let regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return !regEmail.test(user);
+  }
   const submitForm = ()=>{
     let flag = false;
         if(user?.length==0){
-          setError((prev)=>({...prev,user:'Username is required'}));
+          setError((prev)=>({...prev,user:'Email is required'}));
           flag = true;
         }
-        if(user?.length<6){
-          setError((prev)=>({...prev,user:'Username must be atleast 6 characters long'}));
+        else if(checkEmail()){
+          setError((prev)=>({...prev,user:'Email is invalid'}));
           flag = true;
         }
         if(password?.length==0){
@@ -51,7 +54,7 @@ export default function Home() {
             htmlFor="input-group-1"
             className="flex flex-col pt-6 text-emerald-400"
           >
-            Username
+            Email
           </label>
 
           <div className="flex flex-col">
@@ -61,7 +64,7 @@ export default function Home() {
               value={user}
               onChange={(e)=>setUser(e.target.value)}
               className="mt-2 bg-transparent border-b-[1px] placeholder-slate-500 focus:outline-none focus:border-emerald-600 focus:border-b-2  border-emerald-400 text-black block flex-1 min-w-0 w-full text-md pb-1 pt-2"
-              placeholder="Username"
+              placeholder="email@abc.com"
             />
             {error?.user?<div className="flex items-center text-sm text-red-700">{error?.user}</div>:null}
           </div>
@@ -89,7 +92,10 @@ export default function Home() {
           </div>
 
         </div>
-        <div className="flex w-4/5 mr-8 justify-end mt-4 text-gray-700 text-[12px]">Create new account &nbsp;<Link className="text-blue-800" href='/signup'>Signup</Link></div>
+        <div className="flex p-2 w-3/4 justify-between mt-4 text-gray-700 text-[12px]">
+        <div className="flex items-center text-blue-800"><Link href='/forgot-password'>Forgot Password</Link></div>
+        <div className="flex justify-end text-gray-700 text-[12px]">Create new account &nbsp;<Link className="text-blue-800" href='/signup'>Signup</Link></div>
+        </div>
         
         <div className="flex w-3/4 pt-4 mt-6 align-center">
         <button type="button" role="presentation" onClick={resetForm} className="py-2 px-5 w-1/5 mr-2 mb-2 text-md font-medium hover:duration-300 text-gray-900 focus:outline-none hover:shadow-sm hover:shadow-gray-700/30 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-emerald-500 focus:z-10">Reset</button>
