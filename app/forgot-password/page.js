@@ -35,7 +35,6 @@ export default function Home() {
 
     if(Number(refs.current[i].value)>=10){
         
-        console.log(e.target.value, i, 'pppppp')
         const val = Number(refs.current[i].value);
         refs.current[i].value = parseInt(refs.current[i].value = val / 10);
         if(i<3) refs.current[i+1].value = val % 10;
