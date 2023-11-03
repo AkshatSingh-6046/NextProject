@@ -1,12 +1,17 @@
 "use client"
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import useGetOnboardUser from "@/components/hooks/getOnboardUser";
 import Image from "next/image";
 import img from '/icons-svg/backGroundLogin.jpg'; 
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 //bg-[#0a0909]"
 export default function Home() {
+  const router = useRouter();
+  const { data,loading, getOnboardApi } = useGetOnboardUser();
+  console.log(data,loading,'ppppppppppp')
   const [user,setUser] = useState('');
   const [password,setPassword] = useState('');
   const [toggle,setToggle] = useState(false);
@@ -20,7 +25,7 @@ export default function Home() {
     let regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return !regEmail.test(user);
   }
-  const submitForm = ()=>{
+  const submitForm = async ()=>{
     let flag = false;
         if(user?.length==0){
           setError((prev)=>({...prev,user:'Email is required'}));
@@ -34,16 +39,26 @@ export default function Home() {
           setError((prev)=>({...prev,password:'Password is required'}));
           flag = true;
         }
-        if(password?.length<8){
-          setError((prev)=>({...prev,password:'Password must be atleast 8 characters long'}));
-          flag = true;
-        }
         if(flag) return;
-        else alert(`User: ${user.toString()}`)
+        else {
+          const data ={email:user,password};
+           await getOnboardApi({data,endPoint:'post_login'});
+        }
   }
+
   useEffect(()=>{
     setError({});
   },[user,password])
+
+  useEffect(()=>{
+    if(data?.data?.data?.id){
+
+      const { id } = data?.data?.data || {};
+      if(id){
+        router.push(`/${id}`);
+      }
+  }
+  },[JSON.stringify(data)])
   return (
     <main className="relative flex min-h-screen flex-row justify-end" >
       <Image src={img} quality={50} layout="fill"/>
