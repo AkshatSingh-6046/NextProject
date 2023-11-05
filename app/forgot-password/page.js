@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef } from "react";
 import { Oval as Loader } from "react-loader-spinner";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import Image from "next/image";
@@ -9,7 +10,9 @@ import useGetOnboardUser from "@/components/hooks/getOnboardUser";
 import getVerifyOtp from "@/components/hooks/getVerifyOtp";
 //bg-[#0a0909]"
 export default function Home() {
+  const router = useRouter();
   const { data, loading, getOnboardApi } = useGetOnboardUser();
+
   const { data: otpData, loading: otpLoading, getOtpApi } = getVerifyOtp();
   console.log(otpData, "ooootttttt");
   const [user, setUser] = useState("");
@@ -76,10 +79,20 @@ export default function Home() {
   useEffect(() => {
     setError({});
   }, [user]);
+
   useEffect(() => {
     if (data?.data?.id) setShowOTP(true);
+    else if (data?.data?.error)
+      setError((p) => ({ ...p, user: data?.data?.error }));
     else setShowOTP(false);
   }, [JSON.stringify(data)]);
+  useEffect(() => {
+    if (otpData?.data?.error)
+      setError((p) => ({ ...p, user: otpData?.data?.error }));
+    else if (otpData?.data?.status === "success")
+      router.push(`/${otpData?.data?.id}/create-password`);
+  }, [JSON.stringify(otpData)]);
+
   useEffect(() => {
     OTP?.forEach((num, i) => {
       if (num?.length === 1) {

@@ -8,6 +8,7 @@ function useGetOnboardUser() {
   const getOtpApi = async ({ data: funcData, endPoint }) => {
     try {
       setLoading(true);
+      setData(null);
       const res = await axios({
         method: "post",
         url: `http://localhost:8000/${endPoint}`,
@@ -16,6 +17,7 @@ function useGetOnboardUser() {
       setData(res?.data);
       console.log(res);
     } catch (error) {
+      setData(error?.response?.data);
       console.log(error);
     } finally {
       setLoading(false);

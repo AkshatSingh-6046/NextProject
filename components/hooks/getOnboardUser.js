@@ -7,21 +7,22 @@ function useGetOnboardUser() {
   const [loading, setLoading] = useState(false);
   const getOnboardApi = async ({ data: funcData, endPoint }) => {
     try {
+      setData(null);
       setLoading(true);
       const res = await axios({
         method: "post",
         url: `http://localhost:8000/${endPoint}`,
         data: funcData,
       });
+
       setData(res?.data);
-      console.log(res);
     } catch (error) {
+      setData(error?.response?.data || error);
       console.log(error);
     } finally {
       setLoading(false);
     }
   };
-
   return {
     getOnboardApi,
     data,
